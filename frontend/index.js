@@ -35,10 +35,36 @@ const updatePasswordBtn = document.querySelector("#updatePasswordBtn");
 const deleteAccountBtn = document.querySelector("#deleteAccountBtn");
 const feedDiv = document.querySelector("#feedDiv");
 
+async function likePost(likedPostId) {
+  const user = await getAccount();
+  const likedPostIds = new Set(user.likedPostIds);
+  likedPostIds.add(likedPostId);
+  console.log(likedPostIds);
+
+  const accountUpdated = await updateAccount({
+    likedPostIds: [...likedPostIds],
+  });
+}
+
+async function unlikePost(unlikedPostId) {
+  const user = await getAccount();
+  const likedPostIds = new Set(user.likedPostIds);
+  likedPostIds.delete(unlikedPostId);
+  console.log(likedPostIds);
+
+  const accountUpdated = await updateAccount({
+    likedPostIds: [...likedPostIds],
+  });
+}
+
 async function populateFeed() {
+  const user = await getAccount();
+  const likedPostIds = new Set(user.likedPostIds);
   const userFeedPosts = await getUserFeedPosts();
   userFeedPosts.forEach((post) => {
-    const likeButtonState = null;
+    const likeButtonState = likedPostIds.has(post._id)
+      ? "like-button-active"
+      : "like-button-inactive";
     const postElement = document.createElement("div");
     postElement.classList.add("box");
     postElement.innerHTML = `
@@ -54,18 +80,36 @@ async function populateFeed() {
           </div>
           <nav class="level is-mobile">
             <div class="level-left">
-              <a class="level-item like-button ${likeButtonState}">
-                <span class="icon">
-                  <i class="fas fa-heart"></i>
-                </span>
+              <small>${post.rating}</small>&nbsp
+              <a class="level-item">
+                <i id="p${
+                  post._id
+                }" class="fa-solid fa-heart like-button ${likeButtonState}"></i>
               </a>
+              <small>posted at ${new Date(
+                post.createdAt
+              ).toLocaleString()}</small>
             </div>
           </nav>
         </div>
       </article>
     `;
     feedDiv.appendChild(postElement);
+    const likeBtn = document.querySelector(`#p${post._id}`);
+    likeBtn.addEventListener("click", (e) => {
+      if (e.target.classList.contains("like-button-active")) {
+        e.target.classList.remove("like-button-active");
+        e.target.classList.add("like-button-inactive");
+        unlikePost(e.target.id.substring(1, e.target.id.length));
+      } else if (e.target.classList.contains("like-button-inactive")) {
+        e.target.classList.remove("like-button-inactive");
+        e.target.classList.add("like-button-active");
+        likePost(e.target.id.substring(1, e.target.id.length));
+      }
+    });
   });
+
+  userFeedPosts.forEach((post) => {});
 }
 
 async function redirectIfUserIsNotLoggedIn() {

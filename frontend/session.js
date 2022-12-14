@@ -58,6 +58,7 @@ export async function updateAccount(update) {
   if (update.communitiesOwned) body.communitiesOwned = update.communitiesOwned;
   if (update.communitiesFollowed)
     body.communitiesFollowed = update.communitiesFollowed;
+  if (update.likedPostIds) body.likedPostIds = update.likedPostIds;
 
   const request = {
     method: "POST",

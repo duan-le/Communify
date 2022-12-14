@@ -82,6 +82,7 @@ app.post("/signup", async (req, res, next) => {
     password: hashPassword(req.body.password),
     communitiesOwned: [],
     communitiesFollowed: [],
+    likedPostIds: [],
   });
 
   const userCreated = await db.createUser(newUser);
@@ -138,6 +139,7 @@ app.post("/update-account", isUserAuthenticated, async (req, res, next) => {
     update.communitiesOwned = req.body.communitiesOwned;
   if (req.body.communitiesFollowed)
     update.communitiesFollowed = req.body.communitiesFollowed;
+  if (req.body.likedPostIds) update.likedPostIds = req.body.likedPostIds;
 
   const userUpdated = await db.updateUser(req.user.username, update);
   if (userUpdated) {
