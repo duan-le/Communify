@@ -132,3 +132,21 @@ export async function createPost(post) {
     return false;
   }
 }
+
+export async function getUserFeedPosts() {
+  const request = {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const response = await fetch(BACKEND_URL + "/get-user-feed-posts", request);
+  if (response.ok) {
+    const res = await response.json();
+    return res;
+  } else {
+    return null;
+  }
+}

@@ -190,6 +190,22 @@ async function getCommunityPosts(community) {
   }
 }
 
+// Success: Returns list of posts from communities that user follows, could also be null if no posts
+// Failure: Returns null
+async function getUserFeedPosts(communities) {
+  try {
+    const posts = await Post.find({ community: { $in: communities } });
+    if (posts.length == 0) {
+      return null;
+    } else {
+      return posts;
+    }
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
 // Success: Returns true
 // Failure: Returns false
 async function updatePost(postId, update) {
@@ -336,6 +352,7 @@ module.exports = {
   createPost,
   getUserPosts,
   getCommunityPosts,
+  getUserFeedPosts,
   updatePost,
   deletePost,
   deleteAllPostsOfCommunity,

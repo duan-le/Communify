@@ -232,6 +232,11 @@ app.get("/get-community-posts", async (req, res, next) => {
   res.send(communityPosts);
 });
 
+app.get("/get-user-feed-posts", async (req, res, next) => {
+  const userFeedPosts = await db.getUserFeedPosts(req.user.communitiesFollowed);
+  res.send(userFeedPosts);
+});
+
 app.delete("/delete-post", isUserAuthenticated, async (req, res, next) => {
   const post = await db.getPost(req.body.postId);
   if (post & (post.author !== req.user.username)) {

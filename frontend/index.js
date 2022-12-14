@@ -7,6 +7,7 @@ import {
   deleteAccount,
   getAllCommunities,
   createPost,
+  getUserFeedPosts,
 } from "./session.js";
 
 const communitiesNavItem = document.querySelector("#communitiesNavItem");
@@ -32,6 +33,40 @@ const accountSettingsModal = document.querySelector("#accountSettingsModal");
 const updatePasswordInput = document.querySelector("#updatePasswordInput");
 const updatePasswordBtn = document.querySelector("#updatePasswordBtn");
 const deleteAccountBtn = document.querySelector("#deleteAccountBtn");
+const feedDiv = document.querySelector("#feedDiv");
+
+async function populateFeed() {
+  const userFeedPosts = await getUserFeedPosts();
+  userFeedPosts.forEach((post) => {
+    const likeButtonState = null;
+    const postElement = document.createElement("div");
+    postElement.classList.add("box");
+    postElement.innerHTML = `
+      <article class="media">
+        <div class="media-content">
+          <div class="content">
+            <p>
+              <strong>${post.title}</strong> <small>@${post.author}</small>
+              <small>in ${post.community}</small>
+              <br />
+              ${post.body}
+            </p>
+          </div>
+          <nav class="level is-mobile">
+            <div class="level-left">
+              <a class="level-item like-button ${likeButtonState}">
+                <span class="icon">
+                  <i class="fas fa-heart"></i>
+                </span>
+              </a>
+            </div>
+          </nav>
+        </div>
+      </article>
+    `;
+    feedDiv.appendChild(postElement);
+  });
+}
 
 async function redirectIfUserIsNotLoggedIn() {
   const userLoggedIn = await isLoggedIn();
@@ -157,3 +192,4 @@ updatePasswordBtn.addEventListener("click", async (e) => {
 });
 
 redirectIfUserIsNotLoggedIn();
+populateFeed();
