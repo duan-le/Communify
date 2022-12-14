@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Communify - Sign Up</title>
+
+    <link
+      rel="shortcut icon"
+      href="resources/favicon.ico"
+      type="image/x-icon"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar container">
+        <div class="navbar-brand">
+          <div class="navbar-item">
+            <img src="resources/logo.png" />
+            <strong class="navbar-brand-text">&emsp; COMMUNIFY</strong>
+          </div>
+
+          <a
+            role="button"
+            class="navbar-burger"
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navMenu"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div id="navMenu" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="#">Home</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-one-third">
+            <div id="errorNotif" class="notification is-danger display-none">
+              Error message placeholder
+              <button class="delete"></button>
+            </div>
+            <div class="box">
+              <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                  <input
+                    id="usernameInput"
+                    class="input"
+                    type="text"
+                    placeholder="Username"
+                  />
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                  <input
+                    id="passwordInput"
+                    class="input"
+                    type="password"
+                    placeholder="********"
+                  />
+                </div>
+              </div>
+
+              <div class="field">
+                <button id="logInBtn" class="button is-primary">Log in</button>
+              </div>
+
+              <div class="field">
+                New to Communify? <a href="signup.html">Sign up</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script
+      src="https://cdn.socket.io/4.5.4/socket.io.min.js"
+      integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="bulma.js"></script>
+    <script type="module" src="login.js"></script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
@@ -24,6 +25,7 @@ const SESSION_SECRET = "secret";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 db.initDBConnection();
 
@@ -66,13 +68,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Debug
-// app.use((req, res, next) => {
-//   console.log(req.session);
-//   console.log(req.user);
-//   next();
-// });
-
 // ----- User related endpoints ------
 
 app.post("/signup", async (req, res, next) => {
@@ -104,7 +99,7 @@ app.post(
   }),
   (err, req, res, next) => {
     if (err) {
-      next(err);
+      res.redirect("/server-error");
     }
   }
 );
@@ -114,13 +109,13 @@ app.use("/login-success", (req, res, next) => {
 });
 
 app.use("/login-failure", (req, res, next) => {
-  res.status(401).send();
+  res.status(401).send({ msg: "Incorrect username or password." });
 });
 
 app.post("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {
-      return next(err);
+      return res.redirect("/server-error");
     }
     res.send();
   });
@@ -153,7 +148,7 @@ app.delete("/delete-account", isUserAuthenticated, async (req, res, next) => {
   if (userDeleted) {
     req.logout((err) => {
       if (err) {
-        return next(err);
+        return res.redirect("/server-error");
       }
       res.send();
     });
