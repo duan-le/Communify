@@ -1,4 +1,5 @@
 import { BACKEND_URL } from "./constants.js";
+import { isLoggedIn } from "./session.js";
 
 const usernameInput = document.querySelector("#usernameInput");
 const passwordInput = document.querySelector("#passwordInput");
@@ -12,6 +13,7 @@ signUpBtn.addEventListener("click", (e) => {
 async function signUp() {
   const request = {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -30,3 +32,12 @@ async function signUp() {
     errorNotif.classList.remove("display-none");
   }
 }
+
+async function redirectIfUserIsLoggedIn() {
+  const userLoggedIn = await isLoggedIn();
+  if (userLoggedIn) {
+    window.location.replace("index.html");
+  }
+}
+
+redirectIfUserIsLoggedIn();

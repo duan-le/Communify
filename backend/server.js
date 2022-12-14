@@ -21,11 +21,12 @@ const {
 
 // This is for demo purposes, should be stored in .env file
 const SESSION_SECRET = "secret";
+const ORIGIN = "http://localhost:5500";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({ credentials: true, origin: ORIGIN }));
 
 db.initDBConnection();
 
@@ -119,6 +120,10 @@ app.post("/logout", (req, res, next) => {
     }
     res.send();
   });
+});
+
+app.get("/is-logged-in", isUserAuthenticated, async (req, res, next) => {
+  res.send();
 });
 
 app.get("/get-account", isUserAuthenticated, async (req, res, next) => {

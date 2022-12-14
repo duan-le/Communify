@@ -49,7 +49,19 @@
 
         <div id="navMenu" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item" href="#">Home</a>
+            <a class="navbar-item" href="index.html">Home</a>
+          </div>
+
+          <div class="navbar-end">
+            <div id="logInSignUpNavItem" class="navbar-item">
+              <div class="buttons">
+                <a class="button is-dark" href="signup.html">Sign up</a>
+                <a class="button is-primary" href="login.html">Log in</a>
+              </div>
+            </div>
+            <div id="logOutNavItem" class="navbar-item display-none">
+              <button id="logOutBtn" class="button is-light">Log out</button>
+            </div>
           </div>
         </div>
       </nav>
@@ -95,12 +107,8 @@
       </div>
     </section>
 
-    <script
-      src="https://cdn.socket.io/4.5.4/socket.io.min.js"
-      integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI"
-      crossorigin="anonymous"
-    ></script>
     <script src="bulma.js"></script>
+    <script type="module" src="navbar.js"></script>
     <script type="module" src="signup.js"></script>
   </body>
 </html>
