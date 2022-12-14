@@ -103,6 +103,17 @@ async function getCommunity(name) {
   }
 }
 
+// Success: Returns list of all communities, could also be null if no communities
+// Failure: Returns null
+async function getAllCommunities() {
+  try {
+    return await Community.find().sort({ name: 1 });
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
 // Success: Returns true
 // Failure: Returns false
 async function updateCommunity(name, update) {
@@ -319,6 +330,7 @@ module.exports = {
   deleteUser,
   createCommunity,
   getCommunity,
+  getAllCommunities,
   updateCommunity,
   deleteCommunity,
   createPost,

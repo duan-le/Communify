@@ -183,9 +183,14 @@ app.post("/create-community", isUserAdmin, async (req, res, next) => {
   }
 });
 
-app.get("get-community", async (req, res, next) => {
+app.get("/get-community", async (req, res, next) => {
   const community = await db.getCommunity(req.body.name);
   res.send(community);
+});
+
+app.get("/get-all-communities", async (req, res, next) => {
+  const communities = await db.getAllCommunities();
+  res.send(communities);
 });
 
 app.delete("/delete-community", isUserAdmin, async (req, res, next) => {
@@ -217,12 +222,12 @@ app.post("/create-post", isUserAuthenticated, async (req, res, next) => {
   }
 });
 
-app.get("get-user-posts", isUserAuthenticated, async (req, res, next) => {
+app.get("/get-user-posts", isUserAuthenticated, async (req, res, next) => {
   const userPosts = await db.getUserPosts(req.user.username);
   res.send(userPosts);
 });
 
-app.get("get-community-posts", async (req, res, next) => {
+app.get("/get-community-posts", async (req, res, next) => {
   const communityPosts = await db.getCommunityPosts(req.body.community);
   res.send(communityPosts);
 });
@@ -266,12 +271,12 @@ app.post("/create-comment", isUserAuthenticated, async (req, res, next) => {
   }
 });
 
-app.get("get-user-comments", isUserAuthenticated, async (req, res, next) => {
+app.get("/get-user-comments", isUserAuthenticated, async (req, res, next) => {
   const userComments = await db.getUserComments(req.user.username);
   res.send(userComments);
 });
 
-app.get("get-post-comments", async (req, res, next) => {
+app.get("/get-post-comments", async (req, res, next) => {
   const postComments = await db.getPostComments(req.body.postId);
   res.send(postComments);
 });

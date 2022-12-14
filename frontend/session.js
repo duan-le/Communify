@@ -34,6 +34,24 @@ export async function logOut() {
   }
 }
 
+export async function getAccount() {
+  const request = {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const response = await fetch(BACKEND_URL + "/get-account", request);
+  if (response.ok) {
+    const res = await response.json();
+    return res;
+  } else {
+    return null;
+  }
+}
+
 export async function updateAccount(update) {
   const body = {};
   if (update.password) body.password = update.password;
@@ -72,5 +90,23 @@ export async function deleteAccount() {
     return true;
   } else {
     return false;
+  }
+}
+
+export async function getAllCommunities() {
+  const request = {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const response = await fetch(BACKEND_URL + "/get-all-communities", request);
+  if (response.ok) {
+    const res = await response.json();
+    return res;
+  } else {
+    return null;
   }
 }
