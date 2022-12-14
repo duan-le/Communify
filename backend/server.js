@@ -133,7 +133,7 @@ app.get("/get-account", isUserAuthenticated, async (req, res, next) => {
 
 app.post("/update-account", isUserAuthenticated, async (req, res, next) => {
   const update = {};
-  if (req.body.password) update.password = req.body.password;
+  if (req.body.password) update.password = hashPassword(req.body.password);
   if (req.body.communitiesOwned)
     update.communitiesOwned = req.body.communitiesOwned;
   if (req.body.communitiesFollowed)
