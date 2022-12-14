@@ -58,8 +58,8 @@
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link"> More </a>
               <div class="navbar-dropdown">
+                <a id="createPostNavItem" class="navbar-item"> Create Post </a>
                 <a class="navbar-item"> My Posts </a>
-                <a class="navbar-item"> My Comments </a>
                 <a id="accountSettingsNavItem" class="navbar-item">
                   Account Settings
                 </a>
@@ -91,6 +91,78 @@
         </div>
       </div>
     </section>
+
+    <div id="communitiesModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Communities</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="container">
+            <div class="columns is-centered">
+              <div class="column is-half">
+                <div class="field">
+                  <label class="label">Following</label>
+                  <div class="control">
+                    <ul id="followingCommunitiesList"></ul>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-half">
+                <div class="field">
+                  <label class="label">Not Following</label>
+                  <div class="control">
+                    <ul id="remainingCommunitiesList"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot"></footer>
+      </div>
+    </div>
+
+    <div id="createPostModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Create Post</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div>
+            <div class="field">
+              <label class="label">Community</label>
+              <div class="control">
+                <div class="select">
+                  <select id="createPostCommunitySelect"></select>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Title</label>
+              <div class="control">
+                <input id="titleInput" class="input" type="text" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Body</label>
+              <div class="control">
+                <textarea id="bodyTextArea" class="textarea"></textarea>
+              </div>
+            </div>
+
+            <button id="publishPostBtn" class="button is-dark">Publish</button>
+          </div>
+        </section>
+        <footer class="modal-card-foot"></footer>
+      </div>
+    </div>
 
     <div id="accountSettingsModal" class="modal">
       <div class="modal-background"></div>
@@ -125,39 +197,6 @@
                 <button id="deleteAccountBtn" class="button is-danger">
                   Delete Account
                 </button>
-              </div>
-            </div>
-          </div>
-        </section>
-        <footer class="modal-card-foot"></footer>
-      </div>
-    </div>
-
-    <div id="communitiesModal" class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Communities</p>
-          <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <div class="container">
-            <div class="columns is-centered">
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">Following</label>
-                  <div class="control">
-                    <ul id="followingCommunitiesList"></ul>
-                  </div>
-                </div>
-              </div>
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">Not Following</label>
-                  <div class="control">
-                    <ul id="remainingCommunitiesList"></ul>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

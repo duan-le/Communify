@@ -110,3 +110,25 @@ export async function getAllCommunities() {
     return null;
   }
 }
+
+export async function createPost(post) {
+  const request = {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      community: post.community,
+      title: post.title,
+      body: post.body,
+    }),
+  };
+
+  const response = await fetch(BACKEND_URL + "/create-post", request);
+  if (response.ok) {
+    return true;
+  } else {
+    return false;
+  }
+}

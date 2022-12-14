@@ -6,6 +6,7 @@ import {
   updateAccount,
   deleteAccount,
   getAllCommunities,
+  createPost,
 } from "./session.js";
 
 const communitiesNavItem = document.querySelector("#communitiesNavItem");
@@ -16,6 +17,14 @@ const followingCommunitiesList = document.querySelector(
 const remainingCommunitiesList = document.querySelector(
   "#remainingCommunitiesList"
 );
+const createPostNavItem = document.querySelector("#createPostNavItem");
+const createPostModal = document.querySelector("#createPostModal");
+const createPostCommunitySelect = document.querySelector(
+  "#createPostCommunitySelect"
+);
+const publishPostBtn = document.querySelector("#publishPostBtn");
+const titleInput = document.querySelector("#titleInput");
+const bodyTextArea = document.querySelector("#bodyTextArea");
 const accountSettingsNavItem = document.querySelector(
   "#accountSettingsNavItem"
 );
@@ -32,10 +41,10 @@ async function redirectIfUserIsNotLoggedIn() {
 }
 
 async function followCommunity(community) {
-  const user = await getAccount();
-  user.communitiesFollowed.push(community);
+  const { communitiesFollowed } = await getAccount();
+  communitiesFollowed.push(community);
   const accountUpdated = await updateAccount({
-    communitiesFollowed: user.communitiesFollowed,
+    communitiesFollowed: communitiesFollowed,
   });
   if (accountUpdated) {
     populateCommunitiesModal();
@@ -96,7 +105,38 @@ async function populateCommunitiesModal(e) {
 
 communitiesNavItem.addEventListener("click", populateCommunitiesModal);
 
+createPostNavItem.addEventListener("click", async (e) => {
+  titleInput.value = "";
+  bodyTextArea.value = "";
+  createPostCommunitySelect.value = "";
+  createPostCommunitySelect.innerHTML = "";
+  const user = await getAccount();
+  const communitiesFollowed = user.communitiesFollowed.sort((a, b) =>
+    a.localeCompare(b)
+  );
+  communitiesFollowed.forEach((community) => {
+    const option = document.createElement("option");
+    option.innerHTML = community;
+    createPostCommunitySelect.appendChild(option);
+  });
+  createPostModal.classList.add("is-active");
+});
+
+publishPostBtn.addEventListener("click", async (e) => {
+  if (titleInput.value && bodyTextArea && createPostCommunitySelect.value) {
+    const postCreated = await createPost({
+      community: createPostCommunitySelect.value,
+      title: titleInput.value,
+      body: bodyTextArea.value,
+    });
+    if (postCreated) {
+      window.location.replace("index.html");
+    }
+  }
+});
+
 accountSettingsNavItem.addEventListener("click", (e) => {
+  updatePasswordInput.value = "";
   accountSettingsModal.classList.add("is-active");
 });
 
