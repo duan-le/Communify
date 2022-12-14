@@ -11,6 +11,13 @@ const Community = require("./schemas/Community");
 const Post = require("./schemas/Post");
 const Comment = require("./schemas/Comment");
 
+const {
+  hashPassword,
+  validatePassword,
+  isUserAuthenticated,
+  isUserAdmin,
+} = require("./helper.js");
+
 // This is for demo purposes, should be stored in .env file
 const SESSION_SECRET = "secret";
 
@@ -23,7 +30,7 @@ db.initDBConnection();
 passport.use(
   new LocalStrategy(async (username, password, cb) => {
     const user = await db.getUser(username);
-    if (user && password === user.password) {
+    if (user && validatePassword(password, user.password)) {
       return cb(null, user);
     } else {
       return cb(null, false);
@@ -76,7 +83,7 @@ app.post("/signup", async (req, res, next) => {
 
   const newUser = new User({
     username: req.body.username,
-    password: req.body.password,
+    password: hashPassword(req.body.password),
     communitiesOwned: [],
     communitiesFollowed: [],
   });
@@ -119,30 +126,12 @@ app.post("/logout", (req, res, next) => {
   });
 });
 
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.status(401).send({ msg: "You are not authenticated. Please log in." });
-  }
-};
-
-const isAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.admin) {
-    next();
-  } else {
-    res
-      .status(401)
-      .send({ msg: "You are not authorized because you are not an admin." });
-  }
-};
-
-app.get("/get-account", isAuthenticated, async (req, res, next) => {
+app.get("/get-account", isUserAuthenticated, async (req, res, next) => {
   const user = await db.getUser(req.user.username);
   res.send(user);
 });
 
-app.post("/update-account", isAuthenticated, async (req, res, next) => {
+app.post("/update-account", isUserAuthenticated, async (req, res, next) => {
   const update = {};
   if (req.body.password) update.password = req.body.password;
   if (req.body.communitiesOwned)
@@ -159,7 +148,7 @@ app.post("/update-account", isAuthenticated, async (req, res, next) => {
   }
 });
 
-app.delete("/delete-account", isAuthenticated, async (req, res, next) => {
+app.delete("/delete-account", isUserAuthenticated, async (req, res, next) => {
   const userDeleted = await db.deleteUser(req.user.username);
   if (userDeleted) {
     req.logout((err) => {
@@ -175,7 +164,7 @@ app.delete("/delete-account", isAuthenticated, async (req, res, next) => {
 
 // ----- Community related endpoints ------
 
-app.post("/create-community", isAdmin, async (req, res, next) => {
+app.post("/create-community", isUserAdmin, async (req, res, next) => {
   const community = await db.getCommunity(req.body.name);
   if (community) {
     return res.status(409).send({ msg: "Community already exists." });
@@ -199,7 +188,7 @@ app.get("get-community", async (req, res, next) => {
   res.send(community);
 });
 
-app.delete("/delete-community", isAdmin, async (req, res, next) => {
+app.delete("/delete-community", isUserAdmin, async (req, res, next) => {
   const communityDeleted = await db.deleteCommunity(req.body.name);
   // TODO: Need to delete all posts and comments under the community too
   if (communityDeleted) {
@@ -211,7 +200,7 @@ app.delete("/delete-community", isAdmin, async (req, res, next) => {
 
 // ----- Post related endpoints ------
 
-app.post("/create-post", isAuthenticated, async (req, res, next) => {
+app.post("/create-post", isUserAuthenticated, async (req, res, next) => {
   const newPost = new Post({
     author: req.user.username,
     community: req.body.community,
@@ -228,7 +217,7 @@ app.post("/create-post", isAuthenticated, async (req, res, next) => {
   }
 });
 
-app.get("get-user-posts", isAuthenticated, async (req, res, next) => {
+app.get("get-user-posts", isUserAuthenticated, async (req, res, next) => {
   const userPosts = await db.getUserPosts(req.user.username);
   res.send(userPosts);
 });
@@ -238,11 +227,11 @@ app.get("get-community-posts", async (req, res, next) => {
   res.send(communityPosts);
 });
 
-app.delete("/delete-post", isAuthenticated, async (req, res, next) => {
+app.delete("/delete-post", isUserAuthenticated, async (req, res, next) => {
   const post = await db.getPost(req.body.postId);
   if (post & (post.author !== req.user.username)) {
     return res.status(403).send({
-      msg: "You do not have permission to delete a post that you don't own.",
+      msg: "You do not have permission to delete a post that you didn't create.",
     });
   }
 
@@ -256,6 +245,50 @@ app.delete("/delete-post", isAuthenticated, async (req, res, next) => {
     } else {
       res.redirect("/server-error");
     }
+  }
+});
+
+// ----- Comment related endpoints ------
+
+app.post("/create-comment", isUserAuthenticated, async (req, res, next) => {
+  const newComment = new Comment({
+    author: req.user.username,
+    postId: req.body.postId,
+    body: req.body.body,
+    rating: 0,
+  });
+
+  const commentCreated = await db.createComment(newComment);
+  if (commentCreated) {
+    res.send();
+  } else {
+    res.redirect("/server-error");
+  }
+});
+
+app.get("get-user-comments", isUserAuthenticated, async (req, res, next) => {
+  const userComments = await db.getUserComments(req.user.username);
+  res.send(userComments);
+});
+
+app.get("get-post-comments", async (req, res, next) => {
+  const postComments = await db.getPostComments(req.body.postId);
+  res.send(postComments);
+});
+
+app.delete("/delete-comment", isUserAuthenticated, async (req, res, next) => {
+  const comment = await db.getComment(req.body.commentId);
+  if (comment & (comment.author !== req.user.username)) {
+    return res.status(403).send({
+      msg: "You do not have permission to delete a comment that you didn't create.",
+    });
+  }
+
+  const commentDeleted = await db.deleteComment(req.body.commentId);
+  if (commentDeleted) {
+    res.send();
+  } else {
+    res.redirect("/server-error");
   }
 });
 
