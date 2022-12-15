@@ -158,6 +158,17 @@ async function createPost(post) {
   }
 }
 
+// Success: Returns post object, could also be null if no post
+// Failure: Returns null
+async function getPost(postId) {
+  try {
+    return await Post.findOne({ _id: postId });
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
 // Success: Returns list of posts created by user, could also be null if no posts
 // Failure: Returns null
 async function getUserPosts(username) {
@@ -192,9 +203,22 @@ async function getCommunityPosts(community) {
 
 // Success: Returns list of posts from communities that user follows, could also be null if no posts
 // Failure: Returns null
-async function getUserFeedPosts(communities) {
+async function getUserFeedPosts(communities, sort) {
   try {
-    const posts = await Post.find({ community: { $in: communities } });
+    let sortCondition = {};
+    if (sort == 1) {
+      sortCondition = { createdAt: "desc" };
+    } else if (sort == 2) {
+      sortCondition = { createdAt: "asc" };
+    } else if (sort == 3) {
+      sortCondition = { rating: "desc", createdAt: "desc" };
+    } else if (sort == 4) {
+      sortCondition = { rating: "asc", createdAt: "desc" };
+    }
+
+    const posts = await Post.find({ community: { $in: communities } }).sort(
+      sortCondition
+    );
     if (posts.length == 0) {
       return null;
     } else {
@@ -350,6 +374,7 @@ module.exports = {
   updateCommunity,
   deleteCommunity,
   createPost,
+  getPost,
   getUserPosts,
   getCommunityPosts,
   getUserFeedPosts,

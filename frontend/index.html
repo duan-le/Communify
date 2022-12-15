@@ -58,8 +58,10 @@
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link"> More </a>
               <div class="navbar-dropdown">
+                <a id="createCommunityNavItem" class="navbar-item display-none">
+                  Create Community
+                </a>
                 <a id="createPostNavItem" class="navbar-item"> Create Post </a>
-                <a class="navbar-item"> My Posts </a>
                 <a id="accountSettingsNavItem" class="navbar-item">
                   Account Settings
                 </a>
@@ -85,7 +87,24 @@
     <section class="section">
       <div class="container">
         <div class="columns is-centered">
-          <div id="feedDiv" class="column is-half"></div>
+          <div class="column is-half">
+            <div class="buttons">
+              Sort by: &emsp;
+              <button id="newestSortBtn" class="button is-small is-light">
+                Newest
+              </button>
+              <button id="oldestSortBtn" class="button is-small is-light">
+                Oldest
+              </button>
+              <button id="mostLikedSortBtn" class="button is-small is-light">
+                Most liked
+              </button>
+              <button id="leastLikedSortBtn" class="button is-small is-light">
+                Least liked
+              </button>
+            </div>
+            <div id="feedDiv"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -117,6 +136,31 @@
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot"></footer>
+      </div>
+    </div>
+
+    <div id="createCommunityModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Create Community</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div>
+            <div class="field">
+              <label class="label">Community</label>
+              <div class="control">
+                <input id="communityInput" class="input" type="text" />
+              </div>
+            </div>
+
+            <button id="createCommunityBtn" class="button is-dark">
+              Create
+            </button>
           </div>
         </section>
         <footer class="modal-card-foot"></footer>

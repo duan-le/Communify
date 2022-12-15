@@ -8,6 +8,9 @@ import {
   getAllCommunities,
   createPost,
   getUserFeedPosts,
+  getPost,
+  updatePost,
+  createCommunity,
 } from "./session.js";
 
 const communitiesNavItem = document.querySelector("#communitiesNavItem");
@@ -18,11 +21,17 @@ const followingCommunitiesList = document.querySelector(
 const remainingCommunitiesList = document.querySelector(
   "#remainingCommunitiesList"
 );
+const createCommunityNavItem = document.querySelector(
+  "#createCommunityNavItem"
+);
+const createCommunityModal = document.querySelector("#createCommunityModal");
+const communityInput = document.querySelector("#communityInput");
 const createPostNavItem = document.querySelector("#createPostNavItem");
 const createPostModal = document.querySelector("#createPostModal");
 const createPostCommunitySelect = document.querySelector(
   "#createPostCommunitySelect"
 );
+const createCommunityBtn = document.querySelector("#createCommunityBtn");
 const publishPostBtn = document.querySelector("#publishPostBtn");
 const titleInput = document.querySelector("#titleInput");
 const bodyTextArea = document.querySelector("#bodyTextArea");
@@ -34,33 +43,50 @@ const updatePasswordInput = document.querySelector("#updatePasswordInput");
 const updatePasswordBtn = document.querySelector("#updatePasswordBtn");
 const deleteAccountBtn = document.querySelector("#deleteAccountBtn");
 const feedDiv = document.querySelector("#feedDiv");
+const newestSortBtn = document.querySelector("#newestSortBtn");
+const oldestSortBtn = document.querySelector("#oldestSortBtn");
+const mostLikedSortBtn = document.querySelector("#mostLikedSortBtn");
+const leastLikedSortBtn = document.querySelector("#leastLikedSortBtn");
 
 async function likePost(likedPostId) {
   const user = await getAccount();
   const likedPostIds = new Set(user.likedPostIds);
   likedPostIds.add(likedPostId);
-  console.log(likedPostIds);
-
   const accountUpdated = await updateAccount({
     likedPostIds: [...likedPostIds],
   });
+
+  const post = await getPost(likedPostId);
+  post.rating++;
+  const updatedPost = await updatePost({
+    postId: likedPostId,
+    rating: post.rating > 0 ? post.rating : 0,
+  });
+  document.querySelector(`#lc${likedPostId}`).innerHTML = updatedPost.rating;
 }
 
 async function unlikePost(unlikedPostId) {
   const user = await getAccount();
   const likedPostIds = new Set(user.likedPostIds);
   likedPostIds.delete(unlikedPostId);
-  console.log(likedPostIds);
-
   const accountUpdated = await updateAccount({
     likedPostIds: [...likedPostIds],
   });
+
+  const post = await getPost(unlikedPostId);
+  post.rating--;
+  const updatedPost = await updatePost({
+    postId: unlikedPostId,
+    rating: post.rating > 0 ? post.rating : 0,
+  });
+  document.querySelector(`#lc${unlikedPostId}`).innerHTML = updatedPost.rating;
 }
 
-async function populateFeed() {
+async function populateFeed(sort) {
+  feedDiv.innerHTML = "";
   const user = await getAccount();
   const likedPostIds = new Set(user.likedPostIds);
-  const userFeedPosts = await getUserFeedPosts();
+  const userFeedPosts = await getUserFeedPosts(sort);
   userFeedPosts.forEach((post) => {
     const likeButtonState = likedPostIds.has(post._id)
       ? "like-button-active"
@@ -80,13 +106,13 @@ async function populateFeed() {
           </div>
           <nav class="level is-mobile">
             <div class="level-left">
-              <small>${post.rating}</small>&nbsp
+              <small id="lc${post._id}">${post.rating}</small>&nbsp
               <a class="level-item">
                 <i id="p${
                   post._id
                 }" class="fa-solid fa-heart like-button ${likeButtonState}"></i>
               </a>
-              <small>posted at ${new Date(
+              <small>created at ${new Date(
                 post.createdAt
               ).toLocaleString()}</small>
             </div>
@@ -184,6 +210,20 @@ async function populateCommunitiesModal(e) {
 
 communitiesNavItem.addEventListener("click", populateCommunitiesModal);
 
+createCommunityNavItem.addEventListener("click", (e) => {
+  communityInput.value = "";
+  createCommunityModal.classList.add("is-active");
+});
+
+createCommunityBtn.addEventListener("click", async (e) => {
+  const communityCreated = await createCommunity({
+    name: communityInput.value,
+  });
+  if (communityCreated) {
+    window.location.replace("index.html");
+  }
+});
+
 createPostNavItem.addEventListener("click", async (e) => {
   titleInput.value = "";
   bodyTextArea.value = "";
@@ -235,5 +275,18 @@ updatePasswordBtn.addEventListener("click", async (e) => {
   }
 });
 
+newestSortBtn.addEventListener("click", (e) => {
+  populateFeed(1);
+});
+oldestSortBtn.addEventListener("click", (e) => {
+  populateFeed(2);
+});
+mostLikedSortBtn.addEventListener("click", (e) => {
+  populateFeed(3);
+});
+leastLikedSortBtn.addEventListener("click", (e) => {
+  populateFeed(4);
+});
+
 redirectIfUserIsNotLoggedIn();
-populateFeed();
+populateFeed(1);

@@ -1,5 +1,5 @@
 import { BACKEND_URL } from "./constants.js";
-import { isLoggedIn, logOut } from "./session.js";
+import { isLoggedIn, logOut, getAccount } from "./session.js";
 
 const logInSignUpNavItem = document.querySelector("#logInSignUpNavItem");
 const logOutNavItem = document.querySelector("#logOutNavItem");
@@ -17,6 +17,14 @@ async function setNavBarItems() {
   if (userLoggedIn) {
     logInSignUpNavItem.classList.add("display-none");
     logOutNavItem.classList.remove("display-none");
+  }
+
+  const user = await getAccount();
+  if (user.admin) {
+    const createCommunityNavItem = document.querySelector(
+      "#createCommunityNavItem"
+    );
+    createCommunityNavItem.classList.remove("display-none");
   }
 }
 

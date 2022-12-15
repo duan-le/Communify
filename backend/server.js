@@ -83,6 +83,7 @@ app.post("/signup", async (req, res, next) => {
     communitiesOwned: [],
     communitiesFollowed: [],
     likedPostIds: [],
+    isAdmin: false,
   });
 
   const userCreated = await db.createUser(newUser);
@@ -224,6 +225,11 @@ app.post("/create-post", isUserAuthenticated, async (req, res, next) => {
   }
 });
 
+app.post("/get-post", isUserAuthenticated, async (req, res, next) => {
+  const post = await db.getPost(req.body.postId);
+  res.send(post);
+});
+
 app.get("/get-user-posts", isUserAuthenticated, async (req, res, next) => {
   const userPosts = await db.getUserPosts(req.user.username);
   res.send(userPosts);
@@ -234,9 +240,27 @@ app.get("/get-community-posts", async (req, res, next) => {
   res.send(communityPosts);
 });
 
-app.get("/get-user-feed-posts", async (req, res, next) => {
-  const userFeedPosts = await db.getUserFeedPosts(req.user.communitiesFollowed);
+app.post("/get-user-feed-posts", async (req, res, next) => {
+  const userFeedPosts = await db.getUserFeedPosts(
+    req.user.communitiesFollowed,
+    req.body.sort
+  );
   res.send(userFeedPosts);
+});
+
+app.post("/update-post", isUserAuthenticated, async (req, res, next) => {
+  const update = {};
+  if (req.body.title) update.title = body.title;
+  if (req.body.body) update.body = req.body.body;
+  update.rating = req.body.rating;
+
+  const postUpdated = await db.updatePost(req.body.postId, update);
+  if (postUpdated) {
+    const post = await db.getPost(req.body.postId);
+    res.send(post);
+  } else {
+    res.redirect("/server-error");
+  }
 });
 
 app.delete("/delete-post", isUserAuthenticated, async (req, res, next) => {
