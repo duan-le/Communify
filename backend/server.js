@@ -83,7 +83,7 @@ app.post("/signup", async (req, res, next) => {
     communitiesOwned: [],
     communitiesFollowed: [],
     likedPostIds: [],
-    isAdmin: false,
+    admin: false,
   });
 
   const userCreated = await db.createUser(newUser);
