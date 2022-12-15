@@ -10,6 +10,7 @@ signUpBtn.addEventListener("click", (e) => {
   signUp();
 });
 
+// Call to server to create an account for the user
 async function signUp() {
   const request = {
     method: "POST",
@@ -33,6 +34,7 @@ async function signUp() {
   }
 }
 
+// Redirect the user if they are logged in
 async function redirectIfUserIsLoggedIn() {
   const userLoggedIn = await isLoggedIn();
   if (userLoggedIn) {

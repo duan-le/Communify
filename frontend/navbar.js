@@ -12,6 +12,8 @@ logOutBtn.addEventListener("click", async (e) => {
   }
 });
 
+// Hides/displays parts of the nav bar depending if user is logged in or not
+// Also hides/displays parts of the nav bar for regular users and admins
 async function setNavBarItems() {
   const userLoggedIn = await isLoggedIn();
   if (userLoggedIn) {

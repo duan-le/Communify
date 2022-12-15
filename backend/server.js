@@ -30,6 +30,7 @@ app.use(cors({ credentials: true, origin: ORIGIN }));
 
 db.initDBConnection();
 
+// Initialize Passport for username and password authentication
 passport.use(
   new LocalStrategy(async (username, password, cb) => {
     const user = await db.getUser(username);
@@ -54,6 +55,7 @@ passport.deserializeUser(async (username, cb) => {
   }
 });
 
+// Using sessions to keep track of users
 app.use(
   session({
     secret: SESSION_SECRET,

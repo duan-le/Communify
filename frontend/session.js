@@ -1,5 +1,6 @@
 import { BACKEND_URL } from "./constants.js";
 
+// Call to server to check if user is logged in
 export async function isLoggedIn() {
   const request = {
     method: "GET",
@@ -17,6 +18,7 @@ export async function isLoggedIn() {
   }
 }
 
+// Call to server to log user out
 export async function logOut() {
   const request = {
     method: "POST",
@@ -34,6 +36,7 @@ export async function logOut() {
   }
 }
 
+// Call to server to get the account details of a user
 export async function getAccount() {
   const request = {
     method: "GET",
@@ -52,6 +55,7 @@ export async function getAccount() {
   }
 }
 
+// Call to server to update a user account
 export async function updateAccount(update) {
   const body = {};
   if (update.password) body.password = update.password;
@@ -77,6 +81,7 @@ export async function updateAccount(update) {
   }
 }
 
+// Call to server to delete a user account
 export async function deleteAccount() {
   const request = {
     method: "DELETE",
@@ -94,6 +99,7 @@ export async function deleteAccount() {
   }
 }
 
+// Call to server to get a list of all communities
 export async function getAllCommunities() {
   const request = {
     method: "GET",
@@ -112,6 +118,7 @@ export async function getAllCommunities() {
   }
 }
 
+// Call to server to create a post
 export async function createPost(post) {
   const request = {
     method: "POST",
@@ -134,6 +141,7 @@ export async function createPost(post) {
   }
 }
 
+// Call to server to get posts for user home feed
 export async function getUserFeedPosts(sort) {
   const request = {
     method: "POST",
@@ -155,6 +163,7 @@ export async function getUserFeedPosts(sort) {
   }
 }
 
+// Call to server to check contents of a single post
 export async function getPost(postId) {
   const request = {
     method: "POST",
@@ -176,6 +185,7 @@ export async function getPost(postId) {
   }
 }
 
+// Call to server to update contents of a single post
 export async function updatePost(update) {
   const body = {};
   if (update.title) body.title = update.title;
@@ -201,6 +211,7 @@ export async function updatePost(update) {
   }
 }
 
+// Call to server to create a community
 export async function createCommunity(community) {
   const request = {
     method: "POST",

@@ -4,6 +4,8 @@ const Community = require("./schemas/Community");
 const Post = require("./schemas/Post");
 const Comment = require("./schemas/Comment");
 
+// These functions are used to do CRUD operations to the database
+
 // This is for demo purposes, should be stored in .env file
 const COLLECTION_NAME = "communify";
 const DB_USERNAME = "communify";

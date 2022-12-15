@@ -48,6 +48,7 @@ const oldestSortBtn = document.querySelector("#oldestSortBtn");
 const mostLikedSortBtn = document.querySelector("#mostLikedSortBtn");
 const leastLikedSortBtn = document.querySelector("#leastLikedSortBtn");
 
+// Increase like counter on post and database
 async function likePost(likedPostId) {
   const user = await getAccount();
   const likedPostIds = new Set(user.likedPostIds);
@@ -65,6 +66,7 @@ async function likePost(likedPostId) {
   document.querySelector(`#lc${likedPostId}`).innerHTML = updatedPost.rating;
 }
 
+// Decrease like counter on post and database
 async function unlikePost(unlikedPostId) {
   const user = await getAccount();
   const likedPostIds = new Set(user.likedPostIds);
@@ -82,6 +84,7 @@ async function unlikePost(unlikedPostId) {
   document.querySelector(`#lc${unlikedPostId}`).innerHTML = updatedPost.rating;
 }
 
+// Populate the user's home feed
 async function populateFeed(sort) {
   feedDiv.innerHTML = "";
   const user = await getAccount();
@@ -138,6 +141,7 @@ async function populateFeed(sort) {
   userFeedPosts.forEach((post) => {});
 }
 
+// Redirect users back to login page if they are not logged in
 async function redirectIfUserIsNotLoggedIn() {
   const userLoggedIn = await isLoggedIn();
   if (!userLoggedIn) {
@@ -145,6 +149,7 @@ async function redirectIfUserIsNotLoggedIn() {
   }
 }
 
+// Logic to follow a community
 async function followCommunity(community) {
   const { communitiesFollowed } = await getAccount();
   communitiesFollowed.push(community);
@@ -156,6 +161,7 @@ async function followCommunity(community) {
   }
 }
 
+// Logic to unfollow a community
 async function unfollowCommunity(community) {
   const user = await getAccount();
   const communitiesFollowed = user.communitiesFollowed.filter(
@@ -169,6 +175,7 @@ async function unfollowCommunity(community) {
   }
 }
 
+// Populate the list of communities in the Communities modal
 async function populateCommunitiesModal(e) {
   followingCommunitiesList.innerHTML = "";
   remainingCommunitiesList.innerHTML = "";
@@ -208,6 +215,7 @@ async function populateCommunitiesModal(e) {
   communitiesModal.classList.add("is-active");
 }
 
+// Create community event listeners
 communitiesNavItem.addEventListener("click", populateCommunitiesModal);
 
 createCommunityNavItem.addEventListener("click", (e) => {
@@ -224,6 +232,7 @@ createCommunityBtn.addEventListener("click", async (e) => {
   }
 });
 
+// Create post event listeners
 createPostNavItem.addEventListener("click", async (e) => {
   titleInput.value = "";
   bodyTextArea.value = "";
@@ -254,6 +263,7 @@ publishPostBtn.addEventListener("click", async (e) => {
   }
 });
 
+// Account settings event listeners
 accountSettingsNavItem.addEventListener("click", (e) => {
   updatePasswordInput.value = "";
   accountSettingsModal.classList.add("is-active");
@@ -275,6 +285,7 @@ updatePasswordBtn.addEventListener("click", async (e) => {
   }
 });
 
+// Sorting the user's home feed
 newestSortBtn.addEventListener("click", (e) => {
   populateFeed(1);
 });

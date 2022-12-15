@@ -10,6 +10,7 @@ logInBtn.addEventListener("click", (e) => {
   logIn();
 });
 
+// Call to the server to authenticate the user and log them in
 async function logIn() {
   const request = {
     method: "POST",
@@ -33,6 +34,7 @@ async function logIn() {
   }
 }
 
+// Redirect the user if they are logged in
 async function redirectIfUserIsLoggedIn() {
   const userLoggedIn = await isLoggedIn();
   if (userLoggedIn) {
